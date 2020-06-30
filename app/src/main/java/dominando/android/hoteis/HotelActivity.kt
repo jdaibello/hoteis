@@ -1,6 +1,7 @@
 package dominando.android.hoteis
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 
 class HotelActivity : AppCompatActivity(), HotelListFragment.OnHotelClickListener {
@@ -10,7 +11,21 @@ class HotelActivity : AppCompatActivity(), HotelListFragment.OnHotelClickListene
     }
 
     override fun onHotelClick(hotel: Hotel) {
-        showDetailsActivity(hotel.id)
+        if (isTablet()) {
+            showDetailsFragment(hotel.id)
+        } else {
+            showDetailsActivity(hotel.id)
+        }
+    }
+
+    private fun isTablet() = findViewById<View>(R.id.details) != null
+    
+    private fun showDetailsFragment(hotelId: Long) {
+        val fragment = HotelDetailsFragment.newInstance(hotelId)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.details, fragment, HotelDetailsFragment.TAG_DETAILS)
+            .commit()
     }
 
     private fun showDetailsActivity(hotelId: Long) {
